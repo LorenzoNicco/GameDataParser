@@ -10,6 +10,8 @@ public class GameDataParserApp
     private UserInteraction _userInteraction = new UserInteraction();
     bool FileReadFlag = false;
     string fetchFile = default;
+    string fileNameFromUser = default;
+
     public void run()
     {
         do
@@ -18,7 +20,7 @@ public class GameDataParserApp
             {
                 _userInteraction.AskUserAFileName();
 
-                var fileNameFromUser = _userInteraction.GetFileNameFromUser();
+                fileNameFromUser = _userInteraction.GetFileNameFromUser();
 
                 fetchFile = File.ReadAllText(fileNameFromUser);
 
@@ -39,7 +41,23 @@ public class GameDataParserApp
         }
         while (!FileReadFlag);
 
-        var videoGamesList = JsonSerializer.Deserialize<List<VideoGame>>(fetchFile);
+        List<VideoGame> videoGamesList = default;
+
+        try
+        {
+            videoGamesList = JsonSerializer.Deserialize<List<VideoGame>>(fetchFile);
+        }
+        catch(JsonException ex)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+
+            Console.WriteLine($"JSON in the {fileNameFromUser}  was not in a valid format. JSON body:");
+            Console.WriteLine(fetchFile);
+
+            Console.ForegroundColor = ConsoleColor.White;
+
+            throw new JsonException($"{ex.Message} The file is: {fileNameFromUser}", ex);
+        }
 
         if(videoGamesList.Count > 0 )
         {
