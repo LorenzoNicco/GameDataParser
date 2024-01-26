@@ -8,13 +8,36 @@ Console.ReadKey();
 public class GameDataParserApp
 {
     private UserInteraction _userInteraction = new UserInteraction();
+    bool FileReadFlag = false;
+    string fetchFile = default;
     public void run()
     {
-        _userInteraction.AskUserAFileName();
+        do
+        {
+            try
+            {
+                _userInteraction.AskUserAFileName();
 
-        var fileNameFromUser = _userInteraction.GetFileNameFromUser();
+                var fileNameFromUser = _userInteraction.GetFileNameFromUser();
 
-        var fetchFile = File.ReadAllText(fileNameFromUser);
+                fetchFile = File.ReadAllText(fileNameFromUser);
+
+                FileReadFlag = true;
+            }
+            catch(ArgumentNullException ex)
+            {
+                Console.WriteLine("File name cannot be null.");
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine("File name cannot be empty.");
+            }
+            catch (FileNotFoundException ex)
+            {
+                Console.WriteLine("File not found.");
+            }
+        }
+        while (!FileReadFlag);
 
         var videoGamesList = JsonSerializer.Deserialize<List<VideoGame>>(fetchFile);
 
