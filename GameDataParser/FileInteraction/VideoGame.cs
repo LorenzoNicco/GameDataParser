@@ -1,5 +1,6 @@
 ﻿namespace GameDataParser.FileInteraction
-{    public class VideoGame
+{
+    public class VideoGame
     {
         public string Title { get; init; }
         public int ReleaseYear { get; init; }

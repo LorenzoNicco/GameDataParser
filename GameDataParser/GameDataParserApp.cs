@@ -5,6 +5,7 @@ using System.Text.Json;
 public class GameDataParserApp
 {
     private UserInteraction _userInteraction = new UserInteraction();
+    private PrintLoadedGames _printLoadedGames = new PrintLoadedGames();
     bool FileReadFlag = false;
     string fetchFile = default;
     string fileNameFromUser = default;
@@ -56,18 +57,6 @@ public class GameDataParserApp
             throw new JsonException($"{ex.Message} The file is: {fileNameFromUser}", ex);
         }
 
-        if(videoGamesList.Count > 0 )
-        {
-            Console.WriteLine();
-            Console.WriteLine("Loaded games are:");
-            foreach(var singleGame in videoGamesList)
-            {
-                Console.WriteLine(singleGame);
-            }
-        }
-        else
-        {
-            Console.WriteLine("No games are present in the input file.");
-        }
+        _printLoadedGames.PrintGamesList(videoGamesList);
     }
 }
